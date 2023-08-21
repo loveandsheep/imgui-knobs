@@ -290,6 +290,21 @@ namespace ImGuiKnobs {
         return knob.value_changed;
     }
 
+    bool KnobAngle(const char *label, float *p_value, float v_min, float v_max, float angle_min, float angle_max, float speed, const char *format, ImGuiKnobVariant variant, float size, ImGuiKnobFlags flags, int steps) {
+        const char *_format = format == NULL ? "%.3f" : format; 
+        auto knob = detail::knob_with_drag(label, ImGuiDataType_Float, p_value, v_min, v_max, speed, _format, size, flags);
+        float t = ((float) *p_value - v_min) / (v_max - v_min);
+        knob.angle_min = angle_min * IMGUIKNOBS_PI / 180.0f;
+        knob.angle_max = angle_max * IMGUIKNOBS_PI / 180.0f;
+        knob.angle = knob.angle_min + (knob.angle_max - knob.angle_min) * t;
+        
+        knob.draw_circle(0.6f, detail::GetTrackColorSet(), true, 32);
+        knob.draw_arc(0.85f, 0.41f, knob.angle_min, knob.angle_max, detail::GetTrackColorSet(), 16, 2);
+        knob.draw_dot(0.1f, 0.85f, knob.angle, detail::GetPrimaryColorSet(), true, 18);
+
+        return knob.value_changed;
+    }// namespace ImGuiKnobs
+
     bool Knob(const char *label, float *p_value, float v_min, float v_max, float speed, const char *format, ImGuiKnobVariant variant, float size, ImGuiKnobFlags flags, int steps) {
         const char *_format = format == NULL ? "%.3f" : format;
         return BaseKnob(label, ImGuiDataType_Float, p_value, v_min, v_max, speed, _format, variant, size, flags, steps);
