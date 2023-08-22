@@ -298,9 +298,21 @@ namespace ImGuiKnobs {
         knob.angle_max = angle_max * IMGUIKNOBS_PI / 180.0f;
         knob.angle = knob.angle_min + (knob.angle_max - knob.angle_min) * t;
         
-        knob.draw_circle(0.6f, detail::GetTrackColorSet(), true, 32);
-        knob.draw_arc(0.85f, 0.41f, knob.angle_min, knob.angle_max, detail::GetTrackColorSet(), 16, 2);
-        knob.draw_dot(0.1f, 0.85f, knob.angle, detail::GetPrimaryColorSet(), true, 18);
+        if (variant == ImGuiKnobVariant_Dot)
+        {
+            knob.draw_circle(0.6f, detail::GetTrackColorSet(), true, 32);
+            knob.draw_arc(0.85f, 0.41f, knob.angle_min, knob.angle_max, detail::GetTrackColorSet(), 16, 2);
+            knob.draw_dot(0.1f, 0.85f, knob.angle, detail::GetPrimaryColorSet(), true, 18);
+        }
+        else if (variant == ImGuiKnobVariant_Wiper)
+        {
+            // knob.draw_circle(0.7f, detail::GetTrackColorSet(), true, 30);
+            knob.draw_arc(0.8f, 0.41f, knob.angle_min, knob.angle_max, detail::GetTrackColorSet(), 16, 2);
+
+            if (knob.t > 0.01f) {
+                knob.draw_arc(0.8f, 0.43f, knob.angle_min, knob.angle, detail::GetPrimaryColorSet(), 16, 2);
+            }
+        }
 
         return knob.value_changed;
     }// namespace ImGuiKnobs
